@@ -9,7 +9,7 @@ Well, me too...
 So, I will share to you how to remove Unity splash screen for free without any license $hit!
 
 I haven't tried on some platforms because I haven't installed the dependencies needed to build games on those platforms in Unity, maybe I'll try them in the future.
-But, if you manage to remove the Unity splash screen using the method below, please make a [Pull Request](https://github.com/kiraio-moe/remove-unity-splash-screen "Pull Request") or contact me on [my social media](https://github.com/kiraio-moe) and let me know the details so I can get it straight away updating this thread.
+But, if you manage to remove the Unity splash screen using the method below, please make an [Issue](https://github.com/kiraio-moe/remove-unity-splash-screen/issues "Issue") or contact me through [my social media](https://github.com/kiraio-moe) and let me know the details so I can get it straight away updating this thread.
 
 Without further ado, let's do it!
 
@@ -36,9 +36,10 @@ Install the following tools if you wanna work with another platform:
 
 ## Step-by-step
 
-I don't know how games built with IL2CPP looks like on PC platforms. If you don't mind, please create a dummy project and build with IL2CPP scripting backend and send the build to me via email: <itsyuukunz@gmail.com>. I'll try playing with it ;)
+I don't know how games built with IL2CPP looks like on PC platforms. Is it same as Mono? If yes, please tell me by making an [Issue](https://github.com/kiraio-moe/remove-unity-splash-screen/issues "Issue").  
+If not, please create a dummy project and build with IL2CPP scripting backend and send the build to me via email: <itsyuukunz@gmail.com>. I'll try playing with it ;)
 
-### PC (Mono)
+### PC, Mac, Linux Standalone (Mono)
 
 - Prepare your game that has been built.
 
@@ -65,11 +66,13 @@ I don't know how games built with IL2CPP looks like on PC platforms. If you don'
 
   But, by just removing the **Made with Unity** logo will not work if the **Made with Unity** splash logo is still listed in `m_SplashScreenLogos`. To fix this, we can simply delete the array item that contains the **Made with Unity** logo. Great!
 
+  > Not tested though. But, it's a great way to ensure that we completely remove the logo.
+
   ![Removing Made with Unity logo from Splash Screen Logos array](./img/IMG_PC_Mono_05.png "Removing Made with Unity logo from Splash Screen Logos array")
 
-<span id="img-enable-pro-version"></span>
+<span id="enable-pro-version"></span>
 
-- Now let's move on to other settings. Move to **Asset List** and open `BuildSettings`:
+- Now let's move on to other settings. Move to **Asset List** tab and open `BuildSettings`:
 
   ![Viewing BuildSettings Unity 2019](./img/IMG_PC_Mono_06.png "Viewing BuildSettings Unity 2019")
 
@@ -81,7 +84,7 @@ I don't know how games built with IL2CPP looks like on PC platforms. If you don'
 
   ![Save changes](./img/IMG_PC_Mono_08.png "Save changes")
 
-- Close `globalgamemanagers` on UABE or simply close UABE app, delete the original `globalgamemanagers` file (Remember! you have a backup, don't worry...) and rename `globalgamemanagers-mod` to `globalgamemanagers`.
+- Close `globalgamemanagers` on UABE or simply close UABE app, delete the original `globalgamemanagers` file or rename to something else then rename `globalgamemanagers-mod` to `globalgamemanagers`.
 - Try running the game and be surprised!
 
 #### Fix for Unity >= 2020
@@ -94,8 +97,8 @@ If you've read all the steps above, you should know what the problem is, UABE ca
 
   ![Find Splash Screen boolean](./img/IMG_PC_Mono_09.png "Find Splash Screen boolean")
 
-- Boolean Splash Screen (`m_ShowUnitySplashScreen`) was discovered by the YouTube channel **Awesomegamergame** in his video <https://www.youtube.com/watch?v=xvh0AeZCX9E>. But the way he just change the Splash Screen boolean value to false doesn't work in other versions of Unity. I think this thread as a complement to the tutorial.
-- After changing the Splash Screen boolean, now change the `m_hasPROVersion` boolean exactly like [the method above](#img-enable-pro-version).
+- Boolean Unity splash screen (`m_ShowUnitySplashScreen`) was discovered by the YouTube channel **Awesomegamergame** in his video <https://www.youtube.com/watch?v=xvh0AeZCX9E>. But the way he just change the Unity splash screen boolean value to false doesn't work in other versions of Unity. I think this thread as a complement to his tutorial.
+- After changing the Unity splash screen boolean, now change the `hasPROVersion` boolean exactly like [the method above](#enable-pro-version).
 
 ### Android (Mono, IL2CPP)
 
@@ -114,13 +117,17 @@ If you've read all the steps above, you should know what the problem is, UABE ca
 
   ![Find globalgamemanagers file](./img/IMG_Android_Mono_IL2CPP_03.png "Find globalgamemanagers file")
 
-- **Do the same as in [PC (Mono) section](#pc-mono "PC (Mono) section")**.
+- **Do the same as in [PC, Mac, Linux Standalone (Mono) section](#pc-mac-linux-standalone-mono "PC, Mac, Linux Standalone (Mono) section")**.
 - After finish editing `globalgamemanagers`, go to APKToolGUI and re-compile the decompiled APK folder.
 
   ![Recompile APK](./img/IMG_Android_Mono_IL2CPP_04.png "Recompile APK")
 
 - DONE!
-- For those who have uploaded the game to the App Store (such as Google Play), make sure to sign your APK consistently. If not, when you update your game that is already installed on Android, an error `Signature is inconsistent with an existing application` will appear. For new apps, it might be time for you to start signing APKs consistently.
+- For those who have uploaded the game to the App Store (such as Google Play), make sure to sign your APK consistently. If not, when you update your game that is already installed on Android, an error `Signature is inconsistent with an existing application` will appear.
+
+  > Not fully tested!
+
+  For new apps, it might be time for you to start signing APKs consistently.
 
   > You can generate a Keystore in Unity, go to `Project Settings > Publishing Settings > Manage Keystore` (Make sure you have switched to Android platform).
 
@@ -152,6 +159,8 @@ But after digging deeper, I found a hint that the `globalgamemanagers` file is i
 
 - This time, boolean ``m_ShowUnitySplashScreen`` isn't after the first question mark that appear after the **Product Name**, but after the **Double Quote** (**"**). Change the hex value (in my case, it's offset: 59CEF7) to ``00`` to disable the splash screen.
 
+  > If you change the following highlighted hex value: ``01`` to ``00``, will resulting in some sort of Active Input Handler error.
+
   ![Boolean splash screen location](./img/IMG_WebGL_Mono_IL2CPP_04.png "Boolean splash screen location")
 
 - Now, we need to search where boolean ``hasPROVersion`` located. This is the trickiest part...  
@@ -161,7 +170,7 @@ But after digging deeper, I found a hint that the `globalgamemanagers` file is i
   077fc7b716f3938b594d7ec67f4107f3e125c97d
   ```
 
-  I got it from the ``globalgamemanagers`` file of my game that was built on another platform. You can copy and start looking for that string in HxD. ``m_AuthToken`` may be different, but as far as I can find, other games also have the same identifier as me.
+  I got it from the ``globalgamemanagers`` file of my game that was built on another platform. You can copy and start looking for that string in HxD. ``m_AuthToken`` may be different, but as far as I can find, other games also have the same identifier(?) as me.
 
   ![Searching hasPROVersion boolean](./img/IMG_WebGL_Mono_IL2CPP_05.png "Searching hasPROVersion boolean")
 
@@ -184,9 +193,9 @@ But after digging deeper, I found a hint that the `globalgamemanagers` file is i
 
 Tested and work on games built with the following versions of Unity:
 
-### Unity 2020.3.39.26224 (LTS)
+### Unity 2020.3.39f1 (LTS)
 
-- PC/Windows x86_64 (Mono)
+- PC, Mac, Linux Standalone (Mono)
 - Android (Mono, IL2CPP)
 - WebGL (Mono, IL2CPP)
 
@@ -194,8 +203,9 @@ Tested and work on games built with the following versions of Unity:
 
 - Android (Mono, IL2CPP)
 
-Worked? Please, give it a star ⭐ and tell everyone on [Pull Request](https://github.com/kiraio-moe/remove-unity-splash-screen/pulls "Pull Request").  
-Something is missing? Misinformation? Make an [Issue](https://github.com/kiraio-moe/remove-unity-splash-screen/issues "Issue").
+Worked? Please, give it a star ⭐ and tell everyone on by making an [Issue](https://github.com/kiraio-moe/remove-unity-splash-screen/issues "Issue").  
+Something is missing? Misinformation? Make an [Issue](https://github.com/kiraio-moe/remove-unity-splash-screen/issues "Issue").  
+Have another way in mind? Make a [Pull Request](https://github.com/kiraio-moe/remove-unity-splash-screen/pulls "Pull Request").
 
 ## Huge Thanks
 
