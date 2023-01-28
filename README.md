@@ -2,16 +2,21 @@
 
 ## Introduction
 
-![Unity Splash Screen](./img/IMG_Unity_Splash_Screen.apng "Unity Splash Screen")
+![Unity Splash Screen](./img/IMG_Unity_Splash_Screen.gif "Unity Splash Screen")
 
-Are you a Unity Developer? Did you hate this logo appears in your games? Bother? Didn't have money to buy the license?
-Well, me too...  
-So, I will share to you how to remove Unity splash screen for free without any license $hit!
+> Well, pretty damn controversial.., huh?
 
-I haven't tried on some platforms because I haven't installed the dependencies needed to build games on those platforms in Unity, maybe I'll try them in the future.
+Are you a Unity Developer? Did you bother this logo appear in your game? Didn't have much money to buy the license?
+No worry, I will share to you how to remove Unity splash screen for free without any license $hit!
+
+I haven't tried on some platforms because I haven't installed the dependencies needed to build games on those platforms in Unity.
 But, if you manage to remove the Unity splash screen using the method below, please make an [Issue](https://github.com/kiraio-moe/remove-unity-splash-screen/issues "Issue") or contact me through [my social media](https://github.com/kiraio-moe) and let me know the details so I can get it straight away updating this thread.
 
 Without further ado, let's do it!
+
+## Disclaimer
+
+By doing this, of course you violate the applicable terms of Unity Technologies. #DWYOR!
 
 ## Prerequisite
 
@@ -55,12 +60,10 @@ If not, please create a dummy project and build with IL2CPP scripting backend an
 
   ![View Player Setings Error](./img/IMG_PC_Mono_03.png "View PlayerSettings Error")
 
-  > Need corrections probably. Because one day, I tried to open the PlayerSettings of a game made using Unity 2018 but I can't access it.
+  This happens because UABE didn't support parsing those particular data.
 
-  This happens in games using Unity version >= 2020 where it seems Unity has encrypted (probably) the **PlayerSettings** part but not the other part. Whereas when I try to open the **PlayerSettings** section of the game built using Unity 2019, UABE can still access it.
-
-- We will fix the problems in the Unity 2020 version later. For now, let's focus on games built using Unity <= 2019.  
-  As you can see, we can access PlayerSettings. If we change the value of `m_ShowUnitySplashScreen` to `false` (by double clicking) then the Splash Screen will not appear when starting the game (the **Made with Unity** logo will also not appear automatically) and as you can guess, if we change the value of `m_ShowUnitySplashLogo` to `false` then the **Made with Unity** logo will not appear.
+- We will fix that problem later. For now, let's see how to work with UABE if your Unity version is fully supported by UABE.  
+  As you can see, we can access PlayerSettings. If we change the value of `m_ShowUnitySplashScreen` to `false` (by double clicking) then the entire Splash Screen will not appear when starting the game (the **Made with Unity** logo will also not appear automatically) and as you can guess, if we change the value of `m_ShowUnitySplashLogo` to `false` then the **Made with Unity** logo will not appear.
 
   ![Accessing PlayerSettings Unity 2019](./img/IMG_PC_Mono_04.png "Accessing PlayerSettings Unity 2019")
 
@@ -69,8 +72,6 @@ If not, please create a dummy project and build with IL2CPP scripting backend an
   > Not tested though. But, it's a great way to ensure that we completely remove the logo.
 
   ![Removing Made with Unity logo from Splash Screen Logos array](./img/IMG_PC_Mono_05.png "Removing Made with Unity logo from Splash Screen Logos array")
-
-<span id="enable-pro-version"></span>
 
 - Now let's move on to other settings. Move to **Asset List** tab and open `BuildSettings`:
 
@@ -87,18 +88,21 @@ If not, please create a dummy project and build with IL2CPP scripting backend an
 - Close `globalgamemanagers` on UABE or simply close UABE app, delete the original `globalgamemanagers` file or rename to something else then rename `globalgamemanagers-mod` to `globalgamemanagers`.
 - Try running the game and be surprised!
 
-#### Fix for Unity >= 2020
+#### Fix for Unsupported Version
 
-If you've read all the steps above, you should know what the problem is, UABE can't deserialize PlayerSettings on Unity >= 2020 because it's encrypted (probably). That's why the Hex Editor is coming for! Make sure you meet the [prerequisite](#prerequisite)!
+If you've read all the steps above, you should know what the problem is. UABE can't deserialize some or entire data of ``globalgamemanagers``. That's why the Hex Editor is coming for! We will edit boolean ``m_ShowUnitySplashScreen`` and ``hasPROVersion`` manually using HxD.
 
 - Open `globalgamemanagers` file using HxD.
-- Search your **Company Name** or **Product Name** (in my case it's `kiraio` and `Bungaku`) until you get like the image below.  
+- First, we remove the splash screen. Search your **Company Name** or **Product Name** (in my case it's `kiraio` and `Bungaku`) until you get like the image below.  
   Notice the **first Question Mark (?)** after the product name, right after that there's a hex value `01 01` (in my case, it's in offset: 1060 and 1061). If you change the hex value of the first `01` to `00` then the Splash Screen will be disabled, while the following `01` sets whether the **Made with Unity** logo will appear or not.
 
   ![Find Splash Screen boolean](./img/IMG_PC_Mono_09.png "Find Splash Screen boolean")
 
+- Now we need to switch the ``hasPROVersion`` boolean to ``true``. Search the name of a scene that you included in the build or your Unity version until you get like the image below. The highlighted hex value (offset: E7A4, 20 offset before the Unity version) is the boolean ``hasPROVersion``. Change to ``01`` value to enable it.
+
+  ![Find hasPROVersion boolean](./img/IMG_PC_Mono_10.png "Find hasPROVersion boolean")
+
 - Boolean Unity splash screen (`m_ShowUnitySplashScreen`) was discovered by the YouTube channel **Awesomegamergame** in his video <https://www.youtube.com/watch?v=xvh0AeZCX9E>. But the way he just change the Unity splash screen boolean value to false doesn't work in other versions of Unity. I think this thread as a complement to his tutorial.
-- After changing the Unity splash screen boolean, now change the `hasPROVersion` boolean exactly like [the method above](#enable-pro-version).
 
 ### Android (Mono, IL2CPP)
 
@@ -117,7 +121,7 @@ If you've read all the steps above, you should know what the problem is, UABE ca
 
   ![Find globalgamemanagers file](./img/IMG_Android_Mono_IL2CPP_03.png "Find globalgamemanagers file")
 
-- **Do the same as in [PC, Mac, Linux Standalone (Mono) section](#pc-mac-linux-standalone-mono "PC, Mac, Linux Standalone (Mono) section")**.
+- Do the same as in [PC, Mac, Linux Standalone (Mono) section](#pc-mac-linux-standalone-mono "PC, Mac, Linux Standalone (Mono) section").
 - After finish editing `globalgamemanagers`, go to APKToolGUI and re-compile the decompiled APK folder.
 
   ![Recompile APK](./img/IMG_Android_Mono_IL2CPP_04.png "Recompile APK")
@@ -133,6 +137,21 @@ If you've read all the steps above, you should know what the problem is, UABE ca
 
   ![Signing APK](./img/IMG_Android_Mono_IL2CPP_05.png "Signing APK")
 
+### Alternative: data.unity3d
+
+I just discovered that my Unity Android game is using ``data.unity3d`` file to store the ``globalgamemanagers`` file like in [WebGL](#webgl-mono-il2cpp "WebGL"):
+
+![data.unity3d file](./img/IMG_Android_Mono_IL2CPP_06.png "data.unity3d file")
+
+The steps to remove the splash screen is same as before. The boolean ``m_ShowUnitySplashScreen`` is same after the first question mark:
+
+![Boolean m_ShowUnitySplashScreen location](./img/IMG_Android_Mono_IL2CPP_07.png "Boolean m_ShowUnitySplashScreen location")
+
+While boolean ``hasPROVersion`` is slightly different with ``globalgamemanagers`` in [PC, Mac, Linux Standalone (Mono)](#pc-mac-linux-standalone-mono "PC, Mac, Linux Standalone (Mono)").  
+12 offset before the 'cutted' Unity version:
+
+![Signing APK](./img/IMG_Android_Mono_IL2CPP_08.png "Signing APK")
+
 ### WebGL (Mono, IL2CPP)
 
 I thought I would give up on the WebGL build because I think the `globalgamemanagers` file was in `WebGL.wasm` file which is currently there's no good tool to decompile Web Assembly.  
@@ -142,7 +161,7 @@ But after digging deeper, I found a hint that the `globalgamemanagers` file is i
 
   ![WebGL Build folder structure](./img/IMG_WebGL_Mono_IL2CPP_01.png "WebGL Build folder structure")
 
-- If you build using Brotli (`.br`) or Gzip (`.gzip`) compression, you can install [PeaZip](https://peazip.github.io/ "PeaZip") or any archiving tool to extract `WebGL.data.br` or `WebGL.data.gzip` and get the `WebGL.data` file. After removing the splash screen, you can archive it back into original extension.
+- If you build using Brotli (`.br`) or Gzip (`.gzip`) compression, you can install [PeaZip](https://peazip.github.io/ "PeaZip") or any archiving tool to extract `WebGL.data.br` or `WebGL.data.gzip` and get the `WebGL.data` file. After removing the splash screen, you can archive it back into the original extension.
 
   > Did you know? You can unpack the content of `WebGL.data` file using [Asset Studio](https://github.com/Perfare/AssetStudio/releases "Asset Studio"), there you will get this:
   >
@@ -153,43 +172,56 @@ But after digging deeper, I found a hint that the `globalgamemanagers` file is i
   > Even I can unpack `WebGL.data`, still I didn't know how to repack it back :(
 
 - With all the limitations above, there is no other way but to edit the `WebGL.data` file directly. Open the `WebGL.data` file using HxD (Don't forget to backup the original file!).
-- Search your **Company Name** or any of string I highlighted below. Until you get like this.
+- Search your **Company Name** or any of string I highlighted below:
 
   ![Searching boolean splash screen](./img/IMG_WebGL_Mono_IL2CPP_03.png "Searching boolean splash screen")
 
-- This time, boolean ``m_ShowUnitySplashScreen`` isn't after the first question mark that appear after the **Product Name**, but after the **Double Quote** (**"**). Change the hex value (in my case, it's offset: 59CEF7) to ``00`` to disable the splash screen.
-
-  > If you change the following highlighted hex value: ``01`` to ``00``, will resulting in some sort of Active Input Handler error.
+- This time, boolean ``m_ShowUnitySplashScreen`` isn't after the first question mark that appear after the **Product Name**, but after the **Double Quote (")**. Change the hex value (in my case, it's offset: 59CEF7) to ``00`` to disable the splash screen.
 
   ![Boolean splash screen location](./img/IMG_WebGL_Mono_IL2CPP_04.png "Boolean splash screen location")
 
+  > If you change the following highlighted hex value: ``01`` to ``00``, will resulting in some sort of Active Input Handler error. So, don't do that!
+
 - Now, we need to search where boolean ``hasPROVersion`` located. This is the trickiest part...  
-  I found a hint to search the boolean using the first 40 characters (from the front) of ``m_AuthToken``.
+  I found a hint to search the boolean using the first 40 characters (from the front) of ``m_AuthToken`` string.
 
   ```txt
   077fc7b716f3938b594d7ec67f4107f3e125c97d
   ```
 
-  I got it from the ``globalgamemanagers`` file of my game that was built on another platform. You can copy and start looking for that string in HxD. ``m_AuthToken`` may be different, but as far as I can find, other games also have the same identifier(?) as me.
+  I got it from the ``globalgamemanagers`` file of my game that was built on another platform.
 
-  ![Searching hasPROVersion boolean](./img/IMG_WebGL_Mono_IL2CPP_05.png "Searching hasPROVersion boolean")
+  ![Searching hasPROVersion boolean using m_AuthToken string](./img/IMG_WebGL_Mono_IL2CPP_05.png "Searching hasPROVersion boolean using m_AuthToken string")
 
-- I tried reverse every hex that has ``00`` or ``01`` value before the string we are looking for.  
-  Finally I found it! The second hex (red) which has a value of ``01`` (I have changed it to ``00`` in the picture) is the boolean ``hasPROVersion``.
+  ``m_AuthToken`` is different for every installed machine. So, you need to build your game into another platform first. If you dilligent enough, you can manually search the string from offset ``5A3E00`` to offset ``5A4000`` or use the string I highlighted below:
+
+  ![Searching hasPROVersion boolean using hinted string](./img/IMG_WebGL_Mono_IL2CPP_06.png "Searching hasPROVersion boolean using hinted string")
+
+- I tried reversing every hex that has ``00`` or ``01`` value before the string we are looking for.  
+  Finally, I found it! The red highlighted hex (offset: 5A3EBA) which has a value of ``01`` (I have changed it to ``00`` in the picture) is the boolean ``hasPROVersion``, while the black highlighted hex (offset: 5A3EBE) is the boolean ``isDebugBuild``.
   > I'm confused why ``00`` which should be ``false`` becomes ``true`` and vice versa.
 
-  ![hasPROVersion boolean location](./img/IMG_WebGL_Mono_IL2CPP_06.png "hasPROVersion boolean location")
+  ![hasPROVersion boolean location](./img/IMG_WebGL_Mono_IL2CPP_07.png "hasPROVersion boolean location")
 
 - Save & DONE!
 
 ## Notes
 
 - There is no difference affecting the splash screen in the `globalgamemanagers` file between Development builds and Release builds.
-- Yep, that's my Android game I used as a test subject. You can see find it at [Google Play Store](https://play.google.com/store/apps/details?id=aili.dev.meongadventure&hl=id&gl=US&pli=1 "Meong Adventure on Google Play Store") XD (Pssttt... a remake is in the works).
 
 ## Result
 
-![MOD Result](./img/IMG_Remove_Unity_Splash_Screen_Result.apng "MOD Result")
+- **Android**
+
+  ![MOD Result Android](./img/IMG_Remove_Unity_Splash_Screen_Result_Android.gif "MOD Result Android")
+
+- **PC**
+
+  ![MOD Result PC](./img/IMG_Remove_Unity_Splash_Screen_Result_PC.gif "MOD Result PC")
+
+- **WebGL**
+
+  ![MOD Result WebGL](./img/IMG_Remove_Unity_Splash_Screen_Result_WebGL.gif "MOD Result WebGL")
 
 Tested and work on games built with the following versions of Unity:
 
@@ -203,7 +235,7 @@ Tested and work on games built with the following versions of Unity:
 
 - Android (Mono, IL2CPP)
 
-Worked? Please, give it a star ⭐ and tell everyone on by making an [Issue](https://github.com/kiraio-moe/remove-unity-splash-screen/issues "Issue").  
+Worked? Please, give it a star ⭐ and tell everyone by making an [Issue](https://github.com/kiraio-moe/remove-unity-splash-screen/issues "Issue").  
 Something is missing? Misinformation? Make an [Issue](https://github.com/kiraio-moe/remove-unity-splash-screen/issues "Issue").  
 Have another way in mind? Make a [Pull Request](https://github.com/kiraio-moe/remove-unity-splash-screen/pulls "Pull Request").
 
@@ -217,7 +249,3 @@ Many thanks to this fellas:
 - [INF1NUM](https://github.com/INF1NUM "INF1NUM") | [AndnixSH](https://github.com/AndnixSH "AndnixSH") for [APKToolGUI](https://github.com/AndnixSH/APKToolGUI "APKToolGUI")
 - [Awesomegamergame](https://www.youtube.com/@Awesomegamergame "Awesomegamergame YouTube channel") for [discovering splash screen offset](https://www.youtube.com/watch?v=xvh0AeZCX9E)
 - and others that I didn't mention...
-
-## Disclaimer
-
-By doing this, of course you violate the applicable terms of Unity. #DWYOR!
