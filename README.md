@@ -24,8 +24,9 @@ Install the following tools before proceed to [Step-by-step section](#step-by-st
 
 ### General (Required)
 
-- [Unity Asset Bundle Extractor (UABE)](https://github.com/SeriousCache/UABE/releases "Unity Asset Bundle Extractor")
-- [HxD Hex Editor](https://mh-nexus.de/en/hxd/ "HxD Hex Editor")
+- [Unity Asset Bundle Extractor (UABE)](https://github.com/SeriousCache/UABE/releases "Visit Unity Asset Bundle Extractor GitHub repo")
+- [Unity Asset Bundle Extractor Avalonia (UABEA)](https://github.com/nesrak1/UABEA/releases "Unity Asset Bundle Extractor Avalonia (UABEA) GitHub repo")
+- [HxD Hex Editor](https://mh-nexus.de/en/hxd/ "Visit HxD Hex Editor website")
 
 ### Platform Specific
 
@@ -38,26 +39,54 @@ Install the following tools if you wanna work with another platform:
 
 ## Step-by-step
 
+Before doing the actual work, don't forget to always backup the original files.
+
+If you build a new game with different Project Settings, you need to remove the splash screen again to avoid any errors. Don't just replacing using the old modded `globalgamemanagers` or `data.unity3d` file.
+
 ### Universal
+
+#### data.unity3d
+
+Unity will use `globalgamemanagers` file directly in your game if you choose the Compression Method to Default. While LZ4 & LZ4HC, Unity will pack/compress `globalgamemanagers` file and other resources file into `data.unity3d` file. So, removing Unity splash screen will be much more easy if we can get `globalgamemanagers` directly.
+
+![Unity Compression Method](./img/IMG_Universal_data.unity3d_01.png "Unity Compression Method")
+
+Sadly, if I try to open `data.unity3d` file using UABE, UABE can't open it.
+
+![UABE can't open data.unity3d file](./img/IMG_Universal_data.unity3d_02.png "UABE can't open data.unity3d file")
+
+But, with this great fork of UABE, UABE Avalonia can read `data.unity3d` file seamlessly. UABEA is similiar with UABE, but the downfall of it is that UABEA didn't support editing like UABE. That's ok, we can edit it with external tools. Okay, let's remove the splash screen.
+
+- Open `data.unity3d` file using UABEA. If UABEA prompting to decompress the data to File or in Memory, I prefer to Memory.
+- Choose `globalgamemanagers` then Export. Save it as `globalgamemanagers-mod` (or whatever name you want).
+
+  ![Exporting globalgamemanagers](./img/IMG_Universal_data.unity3d_03.png "Exporting globalgamemanagers")
+
+- Start editing `globalgamemanagers-mod` either using UABE or HxD. How to do it? Read [PC, Mac, Linux Standalone](#pc-mac-linux-standalone "Go to PC, Mac, Linux Standalone") section.
+- After removing the splash screen in `globalgamemanagers-mod`, back to UABEA. Still choosing `globalgamemanagers`, Import `globalgamemanagers-mod`, it will replacing the original `globalgamemanagers` from `data.unity3d`.
+- You're done! Save it as `data-mod.unity3d`. Move or rename original `data.unity3d` to `data-original.unity3d`, then rename `data-mod.unity3d` to `data.unity3d`.
+- `data.unity3d` file size produced by UABEA is much more larger than the original file, you can compress that. Open modded `data.unity3d` in UABEA, then go to File > Compress. Choose either LZ4 or LZMA (LZ4HC), it's up to you.
+
+  ![UABEA compression method](./img/IMG_Universal_data.unity3d_04.png "UABEA compression method")
 
 #### unity default resources
 
 This is the easiest way to remove Unity splash screen. You just need to edit `unity default resources` file in your build.  
 PC: `GameTitle_Data/Resources/`.  
-Android: `assets/bin/Data/`. Steps for decompile & recompile APK file, please refer to [Android section](#android).  
+Android: `assets/bin/Data/`. Steps for decompile & recompile APK file, please refer to [Android](#android) section.  
 
 - Open `unity default resources` file using UABE.
 - Search for `UnitySplash-cube` which is type of Texture2D then view the data.
 
-  ![Searching unity default resources file](./img/IMG_Universal_01.png "Searching unity default resources file")
+  ![Searching unity default resources file](./img/IMG_Universal_unity_default_resources_01.png "Searching unity default resources file")
 
 - Set the `m_Width` and `m_Height` variable to `0` by double click it.
 
-  ![Set m_Width and m_Height variable to 0](./img/IMG_Universal_02.png "Set m_Width and m_Height variable to 0")
+  ![Set m_Width and m_Height variable to 0](./img/IMG_Universal_unity_default_resources_02.png "Set m_Width and m_Height variable to 0")
 
-- Don't forget to set the `Draw Mode` to `All Sequential` and Unity logo duration to 2 second, Player will not notice that blank Made with Unity splash. If the `Draw Mode` is `Unity Logo Below`, it will resulting a weird splash screen where your logo isn't in center but on top.
+- Don't forget to set the `Draw Mode` to `All Sequential` and Unity logo duration to 2 second, Player will not notice that blank Made with Unity splash. If the `Draw Mode` is `Unity Logo Below`, it will resulting in a weird splash screen where your logo isn't in center but on top.
 
-  ![Setting Draw Mode & Logo Duration](./img/IMG_Universal_03.png "Setting Draw Mode & Logo Duration")
+  ![Setting Draw Mode & Logo Duration](./img/IMG_Universal_unity_default_resources_03.png "Setting Draw Mode & Logo Duration")
 
 - DONE! Save then replace original `unity default resources` file.
 
@@ -156,6 +185,8 @@ If you've read all the steps above, you should know what the problem is. UABE ca
 
 ### Alternative: data.unity3d
 
+> If you want an easiest way, please go to [Universal: data.unity3d](#dataunity3d) section.
+
 I just discovered that my Unity Android game is using ``data.unity3d`` file to store the ``globalgamemanagers`` file like in [WebGL](#webgl "WebGL"):
 
 ![data.unity3d file](./img/IMG_Android_06.png "data.unity3d file")
@@ -224,7 +255,9 @@ But after digging deeper, I found a hint that the `globalgamemanagers` file is i
 
 ## Notes
 
-- There is no difference affecting the splash screen in the `globalgamemanagers` file between Development builds and Release builds.
+- If you choose Compresssion Method in Build Settings to Default, Unity will use `globalgamemanagers` directly without packing it into `data.unity3d` file. So, it will be much easier to remove the splash screen.
+- No difference between Development build and Release build.
+- No difference either Mono/IL2CPP scripting backend.
 
 ## Result
 
@@ -252,17 +285,20 @@ Tested and work on games built with the following versions of Unity:
 
 - Android
 
+## Contribute
+
 Worked? Please, give it a star ⭐ and tell everyone by making an [Issue](https://github.com/kiraio-moe/remove-unity-splash-screen/issues "Issue").  
-Something is missing? Misinformation? Make an [Issue](https://github.com/kiraio-moe/remove-unity-splash-screen/issues "Issue").  
+Have a trouble? Make an [Issue](https://github.com/kiraio-moe/remove-unity-splash-screen/issues "Issue").  
 Have another way in mind? Make a [Pull Request](https://github.com/kiraio-moe/remove-unity-splash-screen/pulls "Pull Request").
 
 ## Huge Thanks
 
 Many thanks to this fellas:
 
-- [SeriousCache](https://github.com/SeriousCache "SeriousCache") for [Unity Asset Bundle Extractor (UABE)](https://github.com/SeriousCache/UABE "Unity Asset Bundle Extractor")
-- Maël Hörz for [HxD Hex Editor](https://mh-nexus.de/en/hxd/ "HxD Hex Editor")
-- [iBotPeaches](https://github.com/ibotpeaches "iBotPeaches") for [Apktool CLI](https://ibotpeaches.github.io/Apktool/ "Apktool CLI")
-- [INF1NUM](https://github.com/INF1NUM "INF1NUM") | [AndnixSH](https://github.com/AndnixSH "AndnixSH") for [APKToolGUI](https://github.com/AndnixSH/APKToolGUI "APKToolGUI")
-- [Awesomegamergame](https://www.youtube.com/@Awesomegamergame "Awesomegamergame YouTube channel") for [discovering splash screen offset](https://www.youtube.com/watch?v=xvh0AeZCX9E)
-- and others that I didn't mention...
+- [SeriousCache](https://github.com/SeriousCache "Visit SeriousCache GitHub profile") for [Unity Asset Bundle Extractor (UABE)](https://github.com/SeriousCache/UABE "Visit Unity Asset Bundle Extractor (UABE) GitHub repo")
+- [nesrak1](https://github.com/nesrak1 "Visit nesrak1 GitHub profile") for [Unity Asset Bundle Extractor Avalonia](https://github.com/nesrak1/UABEA "Visit Unity Asset Bundle Extractor Avalonia (UABEA) GitHub repo")
+- Maël Hörz for [HxD Hex Editor](https://mh-nexus.de/en/hxd/ "Visit HxD Hex Editor website")
+- [iBotPeaches](https://github.com/ibotpeaches "Visit iBotPeaches GitHub profile") for [Apktool CLI](https://ibotpeaches.github.io/Apktool/ "Visit Apktool CLI website")
+- [INF1NUM](https://github.com/INF1NUM "Visit INF1NUM gitHub profile") | [AndnixSH](https://github.com/AndnixSH "Visit AndnixSH GitHub profile") for [APKToolGUI](https://github.com/AndnixSH/APKToolGUI "Visit APKToolGUI GitHub repo")
+- [Awesomegamergame](https://www.youtube.com/@Awesomegamergame "Visit Awesomegamergame YouTube channel") for [discovering splash screen offset](https://www.youtube.com/watch?v=xvh0AeZCX9E "Watch How to remove Unity splash screen (forever) on YouTube")
+- and others I didn't mention...
