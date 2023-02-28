@@ -275,15 +275,16 @@ But after digging deeper, I found a hint that the `globalgamemanagers` file is i
 
 Tested and work on games built with the following versions of Unity:
 
-### Unity 2020.3.39f1 (LTS)
-
-- PC, Mac, Linux Standalone
-- Android
-- WebGL
-
-### Unity 2019.4.12f1 (LTS)
-
-- Android
+- Unity 2021.3.39f1
+  - Android ([#2][i2])
+- Unity 2020.3.39f1
+  - PC, Mac, Linux Standalone
+  - Android
+  - WebGL
+- Unity 2019.4.12f1
+  - PC, Mac, Linux Standalone
+  - Android
+  - WebGL
 
 ## Contribute
 
@@ -302,3 +303,5 @@ Many thanks to this fellas:
 - [INF1NUM](https://github.com/INF1NUM "Visit INF1NUM gitHub profile") | [AndnixSH](https://github.com/AndnixSH "Visit AndnixSH GitHub profile") for [APKToolGUI](https://github.com/AndnixSH/APKToolGUI "Visit APKToolGUI GitHub repo")
 - [Awesomegamergame](https://www.youtube.com/@Awesomegamergame "Visit Awesomegamergame YouTube channel") for [discovering splash screen offset](https://www.youtube.com/watch?v=xvh0AeZCX9E "Watch How to remove Unity splash screen (forever) on YouTube")
 - and others I didn't mention...
+
+[i2]: https://github.com/kiraio-moe/remove-unity-splash-screen/issues/2
