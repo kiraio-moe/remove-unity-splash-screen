@@ -14,13 +14,32 @@ But, if you manage to remove the Unity splash screen using the method below, ple
 
 Without further ado, let's do it!
 
+## Table of Contents
+
+- [Disclaimer](#disclaimer "Disclaimer")
+- [Prerequisites](#prerequisites "Prerequisites")
+  - [General (Required)](#general-required "General (Required)")
+  - [Platform Specific](#platform-specific "Platform Specific")
+- [Step-by-step](#step-by-step "Step-by-step")
+  - [Universal](#universal "Universal")
+    - [data.unity3d](#dataunity3d "data.unity3d")
+    - [unity default resources](#unity-default-resources "unity default resources")
+  - [PC, Mac, Linux Standalone](#pc-mac-linux-standalone "PC, Mac, Linux Standalone")
+    - [Fix for Unsupported Version](#fix-for-unsupported-version "Fix for Unsupported Version")
+  - [Android](#android "Android")
+    - [Alternative: data.unity3d](#alternative-dataunity3d "Alternative: data.unity3d")
+  - [WebGL](#webgl "WebGL")
+- [Notes](#notes "Notes")
+- [Result](#result "Result")
+- [Credits](#huge-thanks "Credits")
+
 ## Disclaimer
 
 By doing this, of course you violate the applicable terms of Unity Technologies. #DWYOR!
 
-## Prerequisite
+## Prerequisites
 
-Install the following tools before proceed to [Step-by-step section](#step-by-step):
+Install the following tools before proceed to [Step-by-step](#step-by-step) section:
 
 ### General (Required)
 
@@ -42,6 +61,8 @@ Install the following tools if you wanna work with another platform:
 Before doing the actual work, don't forget to always backup the original files.
 
 If you build a new game with different Project Settings, you need to remove the splash screen again to avoid any errors. Don't just replacing using the old modded `globalgamemanagers` or `data.unity3d` file.
+
+You may want to read [PC, Mac, Linux Standalone](#pc-mac-linux-standalone) section first and the rest to know the context then read the [Universal](#universal "Universal") section.
 
 ### Universal
 
@@ -91,6 +112,14 @@ Android: `assets/bin/Data/`. Steps for decompile & recompile APK file, please re
 - DONE! Save then replace original `unity default resources` file.
 
 ### PC, Mac, Linux Standalone
+
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=05ymbWXdZ-8" title="Watch YouTube video" target="_top">
+    <img src="https://img.youtube.com/vi/05ymbWXdZ-8/0.jpg" style="width:50%;">
+  </a>
+  <br>
+  <sub>Watch YouTube video</sub>
+</div>
 
 - Prepare your game that has been built.
 
@@ -152,6 +181,14 @@ If you've read all the steps above, you should know what the problem is. UABE ca
 
 ### Android
 
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=LlXiXN3IngI" title="Watch YouTube video" target="_top">
+    <img src="https://img.youtube.com/vi/LlXiXN3IngI/0.jpg" style="width:50%;">
+  </a>
+  <br>
+  <sub>Watch YouTube video</sub>
+</div>
+
 - Prepare your Unity Android game.
 
   > In the image, I used the `.apks` format which is basically just a `.zip` file, so I just extracted it and got 2 files namely `base.apk` and `split_config.arm64_v8a.apk`. After I finished doing the step below, I archived files again to `.zip` and changed the name of the extension to `.apks`.
@@ -201,6 +238,14 @@ While boolean ``hasPROVersion`` is slightly different with ``globalgamemanagers`
 ![Signing APK](./img/IMG_Android_08.png "Signing APK")
 
 ### WebGL
+
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=ktkaAFYpJzA" title="Watch YouTube video" target="_top">
+    <img src="https://img.youtube.com/vi/ktkaAFYpJzA/0.jpg" style="width:50%;">
+  </a>
+  <br>
+  <sub>Watch YouTube video</sub>
+</div>
 
 I thought I would give up on the WebGL build because I think the `globalgamemanagers` file was in `WebGL.wasm` file which is currently there's no good tool to decompile Web Assembly.  
 But after digging deeper, I found a hint that the `globalgamemanagers` file is in the `WebGL.data` file, in the end I was able to remove the Unity splash screen in the WebGL build :)
