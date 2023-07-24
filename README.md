@@ -1,5 +1,12 @@
 # Remove Unity Splash Screen
 
+## Announcements
+
+Hi guys. Some of you may know, working directly with the hex and changing the value manually would be a hassle and may lead to a problem.
+
+But, worry not. I've made a tool to accomodate this. It's called [Unity Splash Screen Remover (USSR)](https://github.com/kiraio-moe/USSR "Unity Splash Screen Remover (USSR)"). Check this out!  
+Please give your feedbacks and don't forget to give it a ⭐ ^0^
+
 ## Introduction
 
 ![Unity Splash Screen](./img/IMG_Unity_Splash_Screen.gif "Unity Splash Screen")
